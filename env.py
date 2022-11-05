@@ -106,10 +106,10 @@ class Env:
 
         checkers_to_take = Env.checkers_to_take(next_s, a.to, adjacent_cells, turn)
 
-        # TODO: remove cells here
         for checker in checkers_to_take:
             if turn == Players.B:
                 if checker == next_s.king:
+                    # TODO: set `next_s.king` to None
                     next_s.king = (0, 0)
                 else:
                     next_s.whites.remove(checker)
@@ -143,111 +143,24 @@ class Env:
 
                     elif swc in Env.king_surroundings:
                         # check if king is surrounded by three black checkers
-
                         if current_checker[0] == Env.castle[0]:
                             # red
                             if (swc[0] - 1, swc[1]) in s.blacks and (swc[0] + 1, swc[1]) in s.blacks:
                                 res.append(swc)
-                        else:
-                            # green
-                            if ((swc[0], swc[1] - 1) in s.blacks or (swc[0], swc[1] - 1) == Env.castle) and \
-                                    ((swc[0], swc[1] + 1) in s.blacks or (swc[0], swc[1] + 1) == Env.castle):
-                                res.append(swc)
-
-                        if current_checker[1] == Env.castle[1]:
+                        elif current_checker[1] == Env.castle[1]:
                             # red
                             if (swc[0], swc[1] - 1) in s.blacks and (swc[0], swc[1] + 1) in s.blacks:
                                 res.append(swc)
                         else:
                             # green
-                            if ((swc[0] - 1, swc[1]) in s.blacks or (swc[0] - 1, swc[1]) == Env.castle) and \
-                                    ((swc[0] + 1, swc[1]) in s.blacks or (swc[0] + 1, swc[1]) == Env.castle):
-                                res.append(swc)
-
-
-                        # up: 0
-                        # down: 0
-                        # left: 1
-                        # right: 1
-                        '''if current_checker[0] == Env.castle[0]:
-                            is_row = 0
-                        else:
-                            is_row = 1
-                        
-                        
-                        is_row = 0 if current_checker[0] == Env.castle[0] else 1
-
-                        def truth_table(is_row):
-                            z1, z2 = ((1 - is_row), is_row) if is_row == 0 else (is_row, (1 - is_row))
-
-                            left = (swc[0] - z1, swc[1] - z2)
-                            right = (swc[0] + z1, swc[1] + z2)
-                            return (left in s.blacks or left == Env.castle) and (right in s.blacks or right == Env.castle)
-
-                        if (current_checker[0] == Env.castle[0] or current_checker[1] == Env.castle[1]) and \
-                                (truth_table(is_row) or truth_table(1 - is_row)):
-                            res.append(swc)'''
-
-                        '''
-                        # red right
-                        a = (swc[0] - (1 - is_row),   swc[1] - is_row)
-                        
-                        # red left
-                        b = (swc[0] + (1 - is_row),   swc[1] + is_row)
-                        
-                        # green left
-                        c = (swc[0] - is_row,         swc[1] - (1 - is_row))
-
-                        # green right
-                        d = (swc[0] + is_row,         swc[1] + (1 - is_row))
-                        '''
-
-                        '''
-                        # red
-                        if (swc[0] + (1 - is_row) * color, swc[1] - is_row * color) in s.blacks and \
-                                (swc[0] - (1 - is_row) * color, swc[1] + is_row * color) in s.blacks:
-                            res.append(swc)
-                        # green
-                        else:
-                            if ((swc[0] - is_row * color, swc[1] + (1 - is_row) * color) in s.blacks or (swc[0] - is_row * color, swc[1] + (1 - is_row) * color) == Env.castle) and \
-                                  ((swc[0] + is_row * color, swc[1] - (1 - is_row) * color) in s.blacks or (swc[0] + is_row * color, swc[1] - (1 - is_row) * color) == Env.castle):
-                                res.append(swc)
-                        '''
-
-                        '''
-                        # red left
-                        b = (swc[0] - (1 - is_row) * color,   swc[1] + is_row * color)
-
-                        # red right
-                        a = (swc[0] + (1 - is_row) * color,   swc[1] - is_row * color)
-
-                        # green left
-                        c = (swc[0] - is_row * color,         swc[1] + (1 - is_row) * color)
-
-                        # green right
-                        d = (swc[0] + is_row * color,         swc[1] - (1 - is_row) * color)
-
-
-                        # red left
-                        b = (swc[0] + (1 - is_row),   swc[1] - is_row)
-
-                        # red right
-                        a = (swc[0] - (1 - is_row),   swc[1] + is_row)
-
-                        # green left
-                        c = (swc[0] + is_row,         swc[1] - (1 - is_row))
-
-                        # green right
-                        d = (swc[0] - is_row,         swc[1] + (1 - is_row))
-                        '''
-
-                        '''
-                        if ((opposite_checker[1] + 1, opposite_checker[0]) in s.blacks or
-                            (opposite_checker[1] + 1, opposite_checker[0]) == Env.castle) and \
-                           ((current_checker[1], current_checker[0]) in s.blacks or
-                            (current_checker[1], current_checker[0]) == Env.castle):
-                            res.append(swc)
-                        '''
+                            if current_checker[0] == swc[0]:
+                                if ((swc[0] - 1, swc[1]) in s.blacks or (swc[0] - 1, swc[1]) == Env.castle) and \
+                                        ((swc[0] + 1, swc[1]) in s.blacks or (swc[0] + 1, swc[1]) == Env.castle):
+                                    res.append(swc)
+                            else:
+                                if ((swc[0], swc[1] - 1) in s.blacks or (swc[0], swc[1] - 1) == Env.castle) and \
+                                        ((swc[0], swc[1] + 1) in s.blacks or (swc[0], swc[1] + 1) == Env.castle):
+                                    res.append(swc)
                     else:
                         res.append(swc)
                 else:
@@ -279,7 +192,7 @@ class Env:
         else:
             if ch_row > 1:
                 res.append((ch_col, ch_row - 1))
-            if ch_row > 9:
+            if ch_row < 9:
                 res.append((ch_col, ch_row + 1))
             if heading == -1:
                 if ch_col > 1:

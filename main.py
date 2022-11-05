@@ -40,21 +40,25 @@ with open('state.pickle', 'rb') as f:
     board = pickle.load(f)
 '''
 
-initial_state = State(SetList([]), SetList([(4, 3), (5, 2), (6, 3),
-                                            (7, 4), (8, 5), (7, 6),
-                                            (4, 7), (5, 8), (6, 7),
-                                            (3, 4), (2, 5), (3, 6)]), (5, 5))
+initial_state = State(SetList([(5, 3), (7, 5), (9, 3), (7, 1), (8, 1),
+                               (2, 4), (2, 7), (4, 6)]),
+                      SetList([(4, 3), (5, 2),
+                               (7, 4), (7, 2), (8, 2),
+                               (4, 7), (5, 8), (8, 4),
+                               (3, 4), (2, 5), (3, 6)]),
+                      (5, 5))
 
-print(initial_state)
-s1 = Env.transition_function(initial_state, Action((5, 5), (5, 4)), Players.W)
-print(s1)
-s2 = Env.transition_function(s1, Action((4, 3), (4, 4)), Players.B)
-print(s2)
-s3 = Env.transition_function(s2, Action((5, 2), (5, 3)), Players.B)
-print(s3)
-s4 = Env.transition_function(s3, Action((6, 3), (6, 4)), Players.B)
-print(s4)
-quit()
+
+
+# print(initial_state)
+# s1 = Env.transition_function(initial_state, Action((2, 7), (2, 6)), Players.W)
+# print(s1)
+#s2 = Env.transition_function(s1, Action((4, 7), (4, 6)), Players.B)
+#print(s2)
+#s3 = Env.transition_function(s2, Action((5, 8), (5, 7)), Players.B)
+#print(s3)
+#s4 = Env.transition_function(s3, Action((6, 7), (6, 6)), Players.B)
+#print(s4)
 
 conn = ServerConnector(ip_address='localhost', port=5800)
 
@@ -69,25 +73,25 @@ conn_enemy.send_msg(name_enemy)
 print(conv.convert_state(conn.read()))
 conn_enemy.read()
 
-msg = conv.convert_action(Action(frm=(4, 5), to=(4, 6)), turn='WHITE')
+msg = conv.convert_action(Action(frm=(5, 4), to=(2, 4)), turn='WHITE')
 conn.send_msg(msg)
 
 print(conv.convert_state(conn.read()))
 conn_enemy.read()
 
-msg = conv.convert_action(Action(frm=(4, 1), to=(4, 4)), turn='BLACK')
+msg = conv.convert_action(Action(frm=(1, 6), to=(1, 7)), turn='BLACK')
 conn_enemy.send_msg(msg)
 
 print(conv.convert_state(conn.read()))
 conn_enemy.read()
 
-msg = conv.convert_action(Action(frm=(5, 3), to=(4, 3)), turn='WHITE')
+msg = conv.convert_action(Action(frm=(5, 6), to=(2, 6)), turn='WHITE')
 conn.send_msg(msg)
 
 print(conv.convert_state(conn.read()))
 conn_enemy.read()
 
-msg = conv.convert_action(Action(frm=(6, 1), to=(9, 1)), turn='BLACK')
+'''msg = conv.convert_action(Action(frm=(6, 1), to=(9, 1)), turn='BLACK')
 conn_enemy.send_msg(msg)
 
 print(conv.convert_state(conn.read()))
@@ -97,7 +101,7 @@ msg = conv.convert_action(Action(frm=(5, 5), to=(4, 5)), turn='WHITE')
 conn.send_msg(msg)
 
 print(conv.convert_state(conn.read()))
-conn_enemy.read()
+conn_enemy.read()'''
 
 
 

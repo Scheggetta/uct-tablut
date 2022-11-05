@@ -46,6 +46,7 @@ def from_string_to_board(string_to_convert: str) -> list:
 
 
 def from_board_to_state(board: list) -> State:
+    # TODO: check SetList conversion
     fnc = lambda checker: [(j + 1, i + 1) for i, line in enumerate(board) for j, elm in enumerate(line) if elm == checker]
     whites = fnc('WHITE')
     blacks = fnc('BLACK')

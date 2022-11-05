@@ -10,3 +10,6 @@ class Action:
     @property
     def to(self) -> tuple:
         return self.__to
+
+    def __str__(self):
+        return 'from: %s to: %s' % (self.frm, self.to)

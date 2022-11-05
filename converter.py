@@ -4,7 +4,6 @@ import json
 from state import State
 from action import Action
 
-
 from_int_to_str = {i: v for i, v in zip(range(1, 10), string.ascii_lowercase[:10])}
 
 
@@ -40,10 +39,21 @@ def from_byte_to_string(data: bytes) -> str:
     return buf.decode()
 
 
-def from_string_to_json(string_to_convert: str) -> json:
-    js = json.loads(string_to_convert)
+def from_string_to_board(string_to_convert: str) -> list:
+    js: dict = json.loads(string_to_convert)
     board = js['board']
+    return board
 
 
-def from_json_to_state(json_to_convert: json) -> State:
-    pass
+def from_board_to_state(board: list) -> State:
+    fnc = lambda checker: [(j + 1, i + 1) for i, line in enumerate(board) for j, elm in enumerate(line) if elm == checker]
+    whites = fnc('WHITE')
+    blacks = fnc('BLACK')
+    # TODO: test case if the terminal state has no king
+    king = fnc('KING')[0]
+
+    return State(whites, blacks, king)
+
+
+def convert_state(data_in_bytes: bytes) -> State:
+    return from_board_to_state(from_string_to_board(from_byte_to_string(data_in_bytes)))

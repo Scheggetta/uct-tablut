@@ -51,5 +51,4 @@ class SetList(list):
         raise ValueError('Cannot multiply SetList.')
 
     def __str__(self):
-        # FIXME
         return super().__str__()

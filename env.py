@@ -142,6 +142,7 @@ class Env:
                             res.append(swc)
 
                     elif swc in Env.king_surroundings:
+                        # TODO: refactor
                         # check if king is surrounded by three black checkers
                         if current_checker[0] == Env.castle[0]:
                             # red

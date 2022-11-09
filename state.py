@@ -30,6 +30,7 @@ class State:
         return self.whites + [self.king] if turn == Players.W else self.blacks
 
     def __str__(self):
+        # TODO: refactor
         board = [[0 for _ in range(9)] for _ in range(9)]
         mappings = {0: 'W', 1: 'B', 2: 'K'}
         king_died = False

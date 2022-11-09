@@ -1,6 +1,7 @@
 import string
 import json
 
+from setlist import SetList
 from state import State
 from action import Action
 
@@ -46,14 +47,12 @@ def from_string_to_board(string_to_convert: str) -> list:
 
 
 def from_board_to_state(board: list) -> State:
-    # TODO: check SetList conversion
     fnc = lambda checker: [(j + 1, i + 1) for i, line in enumerate(board) for j, elm in enumerate(line) if elm == checker]
     whites = fnc('WHITE')
     blacks = fnc('BLACK')
-    # TODO: test case if the terminal state has no king
     king = fnc('KING')[0]
 
-    return State(whites, blacks, king)
+    return State(SetList(whites), SetList(blacks), king)
 
 
 def convert_state(data_in_bytes: bytes) -> State:

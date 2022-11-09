@@ -1,3 +1,5 @@
+import argparse
+
 from players import Players
 from server_connector import ServerConnector
 import converter as conv
@@ -5,6 +7,40 @@ from action import Action
 from env import Env
 from state import State
 from setlist import SetList
+
+
+parser = argparse.ArgumentParser(prog='SPTeam-tablut',
+                                 description='Artificial intelligence agent that plays tablut')
+parser.add_argument('player_color', type=lambda s: s.upper())
+parser.add_argument('timeout', help='Timeout value in seconds ranging from 1 to 10000')
+parser.add_argument('ip_address')
+
+args = parser.parse_args()
+
+# checks
+if not 1 <= int(args.timeout) <= 10000:
+    raise ValueError('Timeout ranges from 1 to 10000')
+
+conn = ServerConnector(ip_address=args.ip_address, port=Players.port(args.player))
+conn.send_msg(conv.convert_team_name('SPTeam'))
+
+if args.player == Players.W:
+    initial_state = conv.convert_state(conn.read())
+else:
+    conn.read()
+    initial_state = conv.convert_state(conn.read())
+
+# TODO: implement timeout response
+# TODO: check what server sends when timeout is reached
+# TODO: check what server sends after the game finishes
+
+
+
+
+
+
+
+
 
 
 '''s = State(SetList([(3, 3), (5, 4),

@@ -1,6 +1,6 @@
+import env
 from player import Player
 from setlist import SetList
-from env import Env
 
 
 class State:
@@ -8,7 +8,16 @@ class State:
         self.__s = [whites, blacks, king]
 
     def is_terminal(self, turn: Player) -> bool:
-        return self.king is None or self.king in Env.king_escapes or len(Env.get_available_actions(self, turn)) == 0
+        return self.king is None or self.king in env.Env.king_escapes or \
+               len(env.Env.get_available_actions(self, turn)) == 0
+
+    def winner(self, turn: Player) -> Player:
+        if self.king is None:
+            return Player.B
+        if self.king in env.Env.king_escapes:
+            return Player.W
+        if len(env.Env.get_available_actions(self, turn)) == 0:
+            return Player.next_turn(turn)
 
     @property
     def s(self) -> list:
@@ -39,11 +48,11 @@ class State:
         mappings = {0: 'W', 1: 'B', 2: 'K'}
         king_died = False
         for k, lst in enumerate([self.whites, self.blacks, [self.king]]):
+            if lst is None:
+                king_died = True
+                continue
             for i, j in lst:
-                if (i, j) == (0, 0):
-                    king_died = True
-                else:
-                    board[j-1][i-1] = mappings.get(k, 'k')
+                board[j-1][i-1] = mappings.get(k, 'k')
 
         res = '\n'.join([' '.join(map(str, i)) for i in board]) + '\n'
         if king_died:

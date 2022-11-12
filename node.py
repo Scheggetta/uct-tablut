@@ -1,3 +1,5 @@
+from typing import Union
+
 from action import Action
 from env import Env
 from player import Player
@@ -5,9 +7,9 @@ from state import State
 
 
 class Node:
-    def __init__(self, state: State, action_performed: Action, turn: Player, parent_node, depth: int):
+    def __init__(self, state: State, action_performed: Union[Action, None], turn: Player, parent_node, depth: int):
+        # `action_performed` and `parent_node` are initialized if the node is not the root
         self.__state = state
-        # `action_performed` is initialized if the node is not the root
         self.__action_performed = action_performed
         self.__turn = turn
         self.__parent_node = parent_node
@@ -26,12 +28,20 @@ class Node:
         return self.__state
 
     @property
+    def is_terminal(self):
+        return self.state.is_terminal(self.turn)
+
+    @property
     def action_performed(self):
         return self.__action_performed
 
     @property
     def turn(self):
         return self.__turn
+
+    @property
+    def parent_node(self):
+        return self.__parent_node
 
     @property
     def depth(self):
@@ -58,6 +68,10 @@ class Node:
         return self.__children
 
     @property
+    def q(self):
+        return self.v / self.n
+
+    @property
     def untried_actions(self):
         return self.__untried_actions
 
@@ -73,25 +87,15 @@ class Node:
         self.n += 1
         self.v += reward
 
-    def back_propagate(self, root_node, rewards, winner):
-        player = self.state.get_player()
+    def backpropagate(self, winner):
+        winner_reward = 1
+        loser_reward = -1
+        current_node = self
 
-        if player == winner:
-            self.__update(rewards[1])  # this node is bad for the parent
-        elif player == (3 - winner):
-            self.__update(rewards[0])  # this node is good for the parent
-        else:
-            self.__update(rewards[2])  # no player has won (draw)
-
-        if tree_stats and values and (self == root_node):
-            return values
-
-        if not (self == root_node):
-            if tree_stats and (self.__parent_node == root_node):
-                move = self.__move
-                n = self.__n
-                v = self.__v
-                q = v / n
-                values = [move, q, v, n]
-
-            return self.__parent_node.back_propagate(root_node, rewards, winner, tree_stats, values)
+        while current_node is not None:
+            # draw is not considered
+            if current_node.turn == winner:
+                current_node.__update(winner_reward)
+            else:
+                current_node.__update(loser_reward)
+            current_node = current_node.parent_node

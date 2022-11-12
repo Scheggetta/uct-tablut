@@ -1,6 +1,5 @@
 import copy
 
-from state import State
 from action import Action
 from player import Player
 
@@ -38,7 +37,10 @@ class Env:
         pass
 
     @staticmethod
-    def get_available_actions(s: State, turn: Player) -> list[Action]:
+    def get_available_actions(s, turn: Player) -> list[Action]:
+        if s.king is None:
+            return []
+
         checkers = s.checkers(turn)
 
         recompute_other_checkers = False
@@ -95,7 +97,7 @@ class Env:
         return moves
 
     @staticmethod
-    def transition_function(s: State, a: Action, turn: Player) -> State:
+    def transition_function(s, a: Action, turn: Player):
         next_s = copy.deepcopy(s)
 
         if turn == Player.W:
@@ -113,8 +115,7 @@ class Env:
         for checker in checkers_to_take:
             if turn == Player.B:
                 if checker == next_s.king:
-                    # TODO: set `next_s.king` to None
-                    next_s.king = (0, 0)
+                    next_s.king = None
                 else:
                     next_s.whites.remove(checker)
             else:
@@ -123,7 +124,7 @@ class Env:
         return next_s
 
     @staticmethod
-    def checkers_to_take(s: State, current_checker: tuple, adjacent_cells: list[tuple], turn: Player) -> list[tuple]:
+    def checkers_to_take(s, current_checker: tuple, adjacent_cells: list[tuple], turn: Player) -> list[tuple]:
         ally_checkers = s.whites + [s.king] if turn == Player.W else s.blacks
         opponent_checkers = s.whites + [s.king] if turn == Player.B else s.blacks
 

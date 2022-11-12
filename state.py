@@ -43,19 +43,33 @@ class State:
         return self.whites + [self.king] if turn == Player.W else self.blacks
 
     def __str__(self):
-        # TODO: refactor
-        board = [[0 for _ in range(9)] for _ in range(9)]
-        mappings = {0: 'W', 1: 'B', 2: 'K'}
-        king_died = False
-        for k, lst in enumerate([self.whites, self.blacks, [self.king]]):
-            if lst is None:
-                king_died = True
-                continue
-            for i, j in lst:
-                board[j-1][i-1] = mappings.get(k, 'k')
+        sym = {'white': u'●', 'black': u'◎', 'king': u'₻', 'castle': u'□', 'camp': u'□',
+               'horizontal_wall': u'━', 'vertical_wall': u'┃', 'top_left': u'┏', 'top_right': u'┓',
+               'bottom_left': u'┗', 'bottom_right': u'┛', 'empty': ' '}
 
-        res = '\n'.join([' '.join(map(str, i)) for i in board]) + '\n'
-        if king_died:
-            res += 'king died!\n'
+        res = '    A B C D E F G H I\n  ' + sym['top_left'] + sym['horizontal_wall'] * 19 + sym['top_right'] + '\n'
+
+        for row in range(1, 10):
+            symbols = []
+            for col in range(1, 10):
+                cell = col, row
+                if cell in self.whites:
+                    symbols.append(sym['white'])
+                elif cell == self.king:
+                    symbols.append(sym['king'])
+                elif cell in self.blacks:
+                    symbols.append(sym['black'])
+                elif cell == env.Env.castle:
+                    symbols.append(sym['castle'])
+                elif cell in env.Env.camps:
+                    symbols.append(sym['camp'])
+                else:
+                    symbols.append(sym['empty'])
+
+            line = ' ' + ' '.join(symbols) + ' '
+
+            res += '%d ' % row + sym['vertical_wall'] + line + sym['vertical_wall'] + '\n'
+
+        res += '  ' + sym['bottom_left'] + sym['horizontal_wall'] * 19 + sym['bottom_right']
 
         return res

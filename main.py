@@ -8,7 +8,6 @@ from player import Player
 from tree import Tree
 
 
-# TODO: refactor `state.__str__()`
 # TODO: deepcopy
 # TODO: `get_available_actions` in `state.is_terminal(turn)`
 # TODO: `SetList`

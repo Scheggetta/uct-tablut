@@ -1,7 +1,9 @@
 import math
 import random
 
+from env import Env
 from node import Node
+from player import Player
 
 
 class Tree:
@@ -25,7 +27,7 @@ class Tree:
 
         return q + self.ucb_constant * exploration_value
 
-    def uct(self, player, iterations):
+    def uct(self, turn, iterations):
         root_node: Node = self.root_node
 
         for iteration_number in range(iterations):
@@ -34,31 +36,33 @@ class Tree:
             # 1) selection
             # Move down the tree by choosing the node that every time has the maximum value of UCB formula until a node
             # is not fully expanded or is terminal
-            while not current_node.untried_moves and current_node.children:
+            while len(current_node.untried_actions) == 0 and not current_node.state.is_terminal(turn):
                 current_node = max(current_node.children, key=lambda child: self.ucb(current_node, child))
 
             # 2) expansion
-            state = current_node.get_state().clone()
-            untried_moves = current_node.get_untried_moves()
-            depth = current_node.get_depth()
+            is_terminal = current_node.state.is_terminal(turn)
 
-            # if untried_moves is not empty, state is not terminal
-            if untried_moves and depth != tree_depth:
-                rand_move = untried_moves[random.randrange(0, len(untried_moves))]
-                state = state.do_move(rand_move)
-                depth = depth + 1
-                current_node = current_node.add_child(Node(state, rand_move, current_node, depth), rand_move)
+            if not is_terminal:
+                random_action = random.choice(current_node.untried_actions)
+                current_state = Env.transition_function(current_node.state, random_action, turn)
 
-            # 3) rollout
-            moves_done = 0
-            state = state.clone()
-            moves = state.get_moves()
-            while moves:
-                state = state.do_random_move(moves)
-                moves = state.get_moves()
-                moves_done += 1
+                depth = current_node.depth
+                current_turn = Player.next_turn(turn)
+                new_node = Node(current_state, random_action, current_turn, current_node, depth + 1)
+                current_node = current_node.add_child(new_node, random_action)
 
-            # 4) backpropagation, now state is the terminal state
-            rewards = [state.get_reward_of_winner(), state.get_reward_of_loser(), state.get_reward_of_draw()]
-            winner = state.get_winner()
+                # 3) rollout
+                # current_state = current_state.clone()
+
+                # available_actions = Env.get_available_actions(current_state, current_turn)
+                while not current_state.is_terminal(current_turn):
+                    available_actions = Env.get_available_actions(current_state, current_turn)
+                    current_state = Env.transition_function(current_state, random.choice(available_actions),
+                                                            current_turn)
+                    current_turn = Player.next_turn(current_turn)
+                    # available_actions = Env.get_available_actions(current_state, current_turn)
+
+            # 4) backpropagation, now current_state is the terminal current_state
+            rewards = [current_state.get_reward_of_winner(), current_state.get_reward_of_loser(), current_state.get_reward_of_draw()]
+            winner = current_state.get_winner()
             current_node.back_propagate(root_node, rewards, winner)

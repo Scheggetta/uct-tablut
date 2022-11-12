@@ -1,10 +1,14 @@
-from players import Players
+from player import Player
 from setlist import SetList
+from env import Env
 
 
 class State:
     def __init__(self, whites: SetList, blacks: SetList, king: tuple):
         self.__s = [whites, blacks, king]
+
+    def is_terminal(self, turn: Player) -> bool:
+        return self.king is None or self.king in Env.king_escapes or len(Env.get_available_actions(self, turn)) == 0
 
     @property
     def s(self) -> list:
@@ -26,8 +30,8 @@ class State:
     def king(self, value):
         self.s[2] = value
 
-    def checkers(self, turn: Players) -> SetList:
-        return self.whites + [self.king] if turn == Players.W else self.blacks
+    def checkers(self, turn: Player) -> SetList:
+        return self.whites + [self.king] if turn == Player.W else self.blacks
 
     def __str__(self):
         # TODO: refactor

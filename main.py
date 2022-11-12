@@ -1,6 +1,6 @@
 import argparse
 
-from players import Players
+from player import Player
 from server_connector import ServerConnector
 import converter as conv
 from action import Action
@@ -21,10 +21,10 @@ args = parser.parse_args()
 if not 1 <= int(args.timeout) <= 10000:
     raise ValueError('Timeout ranges from 1 to 10000')
 
-conn = ServerConnector(ip_address=args.ip_address, port=Players.port(args.player))
+conn = ServerConnector(ip_address=args.ip_address, port=Player.port(args.player))
 conn.send_msg(conv.convert_team_name('SPTeam'))
 
-if args.player == Players.W:
+if args.player == Player.W:
     initial_state = conv.convert_state(conn.read())
 else:
     conn.read()

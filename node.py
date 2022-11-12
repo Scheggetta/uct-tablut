@@ -1,8 +1,15 @@
+from action import Action
+from env import Env
+from player import Player
+from state import State
+
+
 class Node:
-    def __init__(self, state, action_performed, parent_node, depth):
+    def __init__(self, state: State, action_performed: Action, turn: Player, parent_node, depth: int):
         self.__state = state
         # `action_performed` is initialized if the node is not the root
         self.__action_performed = action_performed
+        self.__turn = turn
         self.__parent_node = parent_node
         self.__depth = depth
 
@@ -12,7 +19,7 @@ class Node:
         self.__v = 0
 
         self.__children = []
-        self.__untried_moves = self.__state.get_moves()
+        self.__untried_actions = Env.get_available_actions(self.__state, self.__turn)
 
     @property
     def state(self):
@@ -21,6 +28,10 @@ class Node:
     @property
     def action_performed(self):
         return self.__action_performed
+
+    @property
+    def turn(self):
+        return self.__turn
 
     @property
     def depth(self):
@@ -47,14 +58,14 @@ class Node:
         return self.__children
 
     @property
-    def untried_moves(self):
-        return self.__untried_moves
+    def untried_actions(self):
+        return self.__untried_actions
 
-    def add_child(self, child, action):
-        assert action in self.__untried_moves
+    def add_child(self, child, action: Action):
+        assert action in self.__untried_actions
 
         self.children.append(child)
-        self.untried_moves.remove(action)
+        self.untried_actions.remove(action)
 
         return child
 

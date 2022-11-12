@@ -2,12 +2,16 @@ import copy
 
 from state import State
 from action import Action
-from players import Players
+from player import Player
 
 
 class Env:
     castle = (5, 5)
     king_surroundings = [(5, 4), (6, 5), (5, 6), (4, 5)]
+    king_escapes = [(2, 1), (3, 1), (7, 1), (8, 1),
+                    (9, 2), (9, 3), (9, 7), (9, 8),
+                    (2, 9), (3, 9), (7, 9), (8, 9),
+                    (1, 2), (1, 3), (1, 7), (1, 8)]
 
     north_camp = [(4, 1), (5, 1), (5, 2), (6, 1)]  # idx: 0
     east_camp = [(9, 4), (9, 5), (8, 5), (9, 6)]   # idx: 1
@@ -34,12 +38,12 @@ class Env:
         pass
 
     @staticmethod
-    def get_available_moves(s: State, turn: Players) -> list[Action]:
+    def get_available_actions(s: State, turn: Player) -> list[Action]:
         checkers = s.checkers(turn)
 
         recompute_other_checkers = False
         checkers_camp_position = {}
-        if turn == Players.B:
+        if turn == Player.B:
             for checker in checkers:
                 camp_position = Env.get_camp_position(checker)
                 if camp_position is not None:
@@ -91,10 +95,10 @@ class Env:
         return moves
 
     @staticmethod
-    def transition_function(s: State, a: Action, turn: Players) -> State:
+    def transition_function(s: State, a: Action, turn: Player) -> State:
         next_s = copy.deepcopy(s)
 
-        if turn == Players.W:
+        if turn == Player.W:
             if a.frm == s.king:
                 next_s.king = a.to
             else:
@@ -107,7 +111,7 @@ class Env:
         checkers_to_take = Env.checkers_to_take(next_s, a.to, adjacent_cells, turn)
 
         for checker in checkers_to_take:
-            if turn == Players.B:
+            if turn == Player.B:
                 if checker == next_s.king:
                     # TODO: set `next_s.king` to None
                     next_s.king = (0, 0)
@@ -119,9 +123,9 @@ class Env:
         return next_s
 
     @staticmethod
-    def checkers_to_take(s: State, current_checker: tuple, adjacent_cells: list[tuple], turn: Players) -> list[tuple]:
-        ally_checkers = s.whites + [s.king] if turn == Players.W else s.blacks
-        opponent_checkers = s.whites + [s.king] if turn == Players.B else s.blacks
+    def checkers_to_take(s: State, current_checker: tuple, adjacent_cells: list[tuple], turn: Player) -> list[tuple]:
+        ally_checkers = s.whites + [s.king] if turn == Player.W else s.blacks
+        opponent_checkers = s.whites + [s.king] if turn == Player.B else s.blacks
 
         # sw_cell = sandwichable_cell
         sw_cells = [cell for cell in adjacent_cells if cell in opponent_checkers]
@@ -134,7 +138,7 @@ class Env:
             opposite_checker = (swc[0] + (1 - direction) * heading, swc[1] + direction * heading)
 
             if opposite_checker in Env.camps + [Env.castle] or opposite_checker in ally_checkers:
-                if turn == Players.B and swc == s.king:
+                if turn == Player.B and swc == s.king:
                     if swc == Env.castle:
                         # check if king is surrounded by four black checkers
                         if (opposite_checker[1], opposite_checker[0]) in s.blacks and \

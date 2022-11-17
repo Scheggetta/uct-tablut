@@ -7,14 +7,16 @@ from node import Node
 from player import Player
 from tree import Tree
 
-# TODO: performance improvements:
+# TODO: speed improvements:
 #       - deepcopy
 #       - `get_available_actions` in `state.is_terminal(turn)`
 #       -`SetList`
 
-# TODO: terminate loop when game finishes
+# TODO: UCT performance improvements:
+#       - symmetry
+#       - `tree.reset_root`
 
-# TODO: symmetry
+# TODO: terminate loop when game finishes
 
 # TODO: deploy on VM
 

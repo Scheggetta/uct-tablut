@@ -39,7 +39,7 @@ class Tree:
 
     def ucb(self, parent_node: Node, child_node: Node) -> float:
         # q value (action value) of child_node
-        q = child_node.v / child_node.n
+        q = child_node.q
 
         exploration_value = math.sqrt(math.log(parent_node.n) / child_node.n)
 

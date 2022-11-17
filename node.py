@@ -95,7 +95,7 @@ class Node:
         while current_node is not None:
             # draw is not considered
             if current_node.turn == winner:
-                current_node.__update(winner_reward)
-            else:
                 current_node.__update(loser_reward)
+            else:
+                current_node.__update(winner_reward)
             current_node = current_node.parent_node

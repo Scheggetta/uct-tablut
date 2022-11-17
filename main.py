@@ -7,12 +7,16 @@ from node import Node
 from player import Player
 from tree import Tree
 
-
-# TODO: deepcopy
-# TODO: `get_available_actions` in `state.is_terminal(turn)`
-# TODO: `SetList`
+# TODO: performance improvements:
+#       - deepcopy
+#       - `get_available_actions` in `state.is_terminal(turn)`
+#       -`SetList`
 
 # TODO: terminate loop when game finishes
+
+# TODO: symmetry
+
+# TODO: deploy on VM
 
 # Seed
 random.seed(100)

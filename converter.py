@@ -47,8 +47,15 @@ def from_string_to_board(string_to_convert: str) -> list:
     return board
 
 
+def from_string_to_turn(string_to_convert: str) -> str:
+    js: dict = json.loads(string_to_convert)
+    turn = js['turn']
+    return turn
+
+
 def from_board_to_state(board: list) -> state.State:
-    fnc = lambda checker: [(j + 1, i + 1) for i, line in enumerate(board) for j, elm in enumerate(line) if elm == checker]
+    fnc = lambda checker: [(j + 1, i + 1) for i, line in enumerate(board) for j, elm in enumerate(line) if
+                           elm == checker]
     whites = fnc('WHITE')
     blacks = fnc('BLACK')
     king = fnc('KING')[0]

@@ -42,6 +42,11 @@ class State:
     def checkers(self, turn: Player) -> SetList:
         return self.whites + [self.king] if turn == Player.W else self.blacks
 
+    def __eq__(self, other):
+        if isinstance(other, State):
+            return self.s == other.s
+        return False
+
     def __str__(self):
         sym = {'white': u'●', 'black': u'◎', 'king': u'₻', 'castle': u'□', 'camp': u'□',
                'horizontal_wall': u'━', 'vertical_wall': u'┃', 'top_left': u'┏', 'top_right': u'┓',

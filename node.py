@@ -43,9 +43,17 @@ class Node:
     def parent_node(self):
         return self.__parent_node
 
+    @parent_node.setter
+    def parent_node(self, value):
+        self.__parent_node = value
+
     @property
     def depth(self):
         return self.__depth
+
+    @depth.setter
+    def depth(self, value):
+        self.__depth = value
 
     @property
     def n(self):

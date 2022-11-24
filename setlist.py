@@ -26,6 +26,11 @@ class SetList(list):
         # WARNING: To be used only when `new_value` is not already present in SetList
         self[self.index(old_value)] = new_value
 
+    def __eq__(self, other):
+        if isinstance(other, SetList):
+            return set(self) == set(other)
+        return False
+
     def __add__(self, other):
         res = SetList(self)
         res.extend(other)

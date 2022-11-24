@@ -22,16 +22,23 @@ class Tree:
     def root_node(self, value):
         self.__root_node = value
 
-    '''
-    def reset_root(self):
-        best_node = max(self.root_node.children, key=lambda child: child.q)
-        new_root_node = Node(state=best_node.state,
-                             action_performed=None,
-                             turn=best_node.turn,
-                             parent_node=None,
-                             depth=0)
-        self.root_node = new_root_node
-    '''
+    def update_root(self, intermediate_state, current_state):
+        try:
+            intermediate_node = list(filter(lambda node: node.state == intermediate_state, self.root_node.children))[0]
+
+            current_node = list(filter(lambda node: node.state == current_state, intermediate_node.children))[0]
+        except IndexError:
+            current_node = Node(state=current_state,
+                                action_performed=None,
+                                turn=self.root_node.turn,
+                                parent_node=None,
+                                depth=0)
+
+        updated_root_node: Node = current_node
+        updated_root_node.parent_node = None
+        updated_root_node.depth = 0
+
+        self.root_node = updated_root_node
 
     @property
     def ucb_constant(self):

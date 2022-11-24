@@ -39,15 +39,15 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(prog='SPTeam-tablut',
                                      description='Artificial intelligence agent that plays tablut')
     parser.add_argument('player', type=lambda s: s.upper())
-    parser.add_argument('timeout', help='Timeout value in seconds ranging from 2 to 10000')
+    parser.add_argument('timeout', help='Timeout value in seconds ranging from 3 to 10000')
     parser.add_argument('ip_address')
 
     args = parser.parse_args()
     turn = Player.get_turn(args.player)
 
     # checks
-    if not 2 <= int(args.timeout) <= 10000:
-        raise ValueError('Timeout ranges from 2 to 10000')
+    if not 3 <= int(args.timeout) <= 10000:
+        raise ValueError('Timeout ranges from 3 to 10000')
 
     conn = ServerConnector(ip_address=args.ip_address, port=Player.port(turn))
     conn.send_msg(conv.convert_team_name('SPTeam'))
@@ -60,15 +60,16 @@ if __name__ == '__main__':
 
     print(initial_state)
 
-    while not initial_state.is_terminal(turn):
-        root_node = Node(state=initial_state,
-                         action_performed=None,
-                         turn=turn,
-                         parent_node=None,
-                         depth=0)
+    root_node = Node(state=initial_state,
+                     action_performed=None,
+                     turn=turn,
+                     parent_node=None,
+                     depth=0)
+    tree = Tree(root_node=root_node, ucb_constant=1.5)
+    current_state = tree.root_node.state
 
-        tree = Tree(root_node=root_node, ucb_constant=1)
-        best_action, iter_n = tree.uct(timeout=int(args.timeout) - 1)
+    while not current_state.is_terminal(turn):
+        best_action, iter_n = tree.uct(timeout=int(args.timeout) - 2)
 
         print('UCT iterations: %d\n' % iter_n)
 
@@ -83,10 +84,12 @@ if __name__ == '__main__':
             print('Match ended!')
             break
 
-        initial_state, server_turn = receive_state()
+        current_state, server_turn = receive_state()
         print('Current state after enemy action:')
-        print(initial_state)
+        print(current_state)
 
         if is_server_down(server_turn):
             print('Match ended!')
             break
+
+        tree.update_root(intermediate_state, current_state)

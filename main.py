@@ -1,5 +1,4 @@
 import argparse
-import random
 
 from server_connector import ServerConnector
 import converter as conv
@@ -19,23 +18,7 @@ def receive_state():
     return state, _server_turn
 
 
-# TODO: remove seed
-
-# TODO: speed improvements:
-#       - deepcopy
-#       - `get_available_actions` in `state.is_terminal(turn)`
-#       - `SetList`
-
-# TODO: UCT performance improvements:
-#       - symmetry
-#       - `tree.reset_root`
-
-# TODO: deploy on VM
-
 if __name__ == '__main__':
-    # Seed
-    random.seed(100)
-
     parser = argparse.ArgumentParser(prog='SPTeam-tablut',
                                      description='Artificial intelligence agent that plays tablut')
     parser.add_argument('player', type=lambda s: s.upper())

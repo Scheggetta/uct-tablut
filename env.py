@@ -128,7 +128,6 @@ class Env:
         ally_checkers = s.whites + [s.king] if turn == Player.W else s.blacks
         opponent_checkers = s.whites + [s.king] if turn == Player.B else s.blacks
 
-        # sw_cell = sandwichable_cell
         sw_cells = [cell for cell in adjacent_cells if cell in opponent_checkers]
 
         res = []
@@ -147,7 +146,6 @@ class Env:
                             res.append(swc)
 
                     elif swc in Env.king_surroundings:
-                        # TODO: refactor
                         # check if king is surrounded by three black checkers
                         if current_checker[0] == Env.castle[0]:
                             # red

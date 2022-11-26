@@ -8,8 +8,8 @@
  
 
 Commands:
-- play as white: /home/tablut/tablut/main.py WHITE <timeout> <ip_address>
-- play as black: /home/tablut/tablut/main.py BLACK <timeout> <ip_address>
+- play as white: main.py WHITE <timeout> <ip_address>
+- play as black: main.py BLACK <timeout> <ip_address>
 
 
 As a performance booster we warmly advice to use PyPy

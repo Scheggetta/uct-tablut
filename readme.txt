@@ -6,6 +6,7 @@
 #      Angelo Quarta - Edoardo Fusa       #
 ###########################################
  
+UCT algorithm applied to Tablut
 
 Commands:
 - play as white: main.py WHITE <timeout> <ip_address>

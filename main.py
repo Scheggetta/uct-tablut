@@ -33,7 +33,7 @@ if __name__ == '__main__':
         raise ValueError('Timeout ranges from 3 to 10000')
 
     conn = ServerConnector(ip_address=args.ip_address, port=Player.port(turn))
-    conn.send_msg(conv.convert_team_name('SPTeam'))
+    conn.send_msg(conv.convert_team_name('SPTeam%s' % args.player[0]))
 
     if turn == Player.W:
         initial_state = conv.convert_state(conn.read())

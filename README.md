@@ -91,8 +91,8 @@ cd /path/to/SPTeam-tablut
 
 
 ## SPTeam
-- [Angelo Quarta](https://github.com/NglQ)
-- [Edoardo Fusa](https://github.com/Scheggetta)
+- [Angelo Quarta](https://github.com/NglQ): angelo.quarta@studio.unibo.it
+- [Edoardo Fusa](https://github.com/Scheggetta): edoardo.fusa@studio.unibo.it
 
 ## Credits
 
